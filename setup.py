@@ -33,7 +33,7 @@ setup(
     ],
     packages=find_packages(),
 
-    install_requires=['scikit-learn'],
+    install_requires=['scikit-learn', 'numpy'],
 
     extras_require={
         'test': [],

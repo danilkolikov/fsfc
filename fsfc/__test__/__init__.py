@@ -1,1 +1,1 @@
-import test
+from .SPECTest import NormalizedCutTest, ArbitraryClusteringTest, FixedClusteringTest
