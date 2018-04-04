@@ -18,6 +18,9 @@ class AlgorithmTest(unittest.TestCase):
 
     @abstractmethod
     def create_selector(self):
+        """
+        :rtype: Selector
+        """
         pass
 
     def setUp(self):
@@ -30,33 +33,41 @@ class AlgorithmTest(unittest.TestCase):
             dataset = AlgorithmTest._load_dataset(dataset_name)
             selector = self.create_selector()
             selector.fit(dataset)
-            mask = selector._get_support_mask()
 
-            transformed = selector.transform(dataset)
-            self.assertEqual(
-                transformed.shape[0],
-                dataset.shape[0],
-                "Some samples were missed"
-            )
-            self.assertLess(
-                transformed.shape[1],
-                dataset.shape[1],
-                "Dimension wasn't reduced"
-            )
-
-            # Shuffle and reselect features
-            permutation = np.random.permutation(dataset.shape[1])
-            reverse = np.zeros(permutation.size, permutation.dtype)
-            reverse[permutation] = range(permutation.size)
-
-            selector = self.create_selector()
-            selector.fit(dataset[:, permutation])
-            new_mask = selector._get_support_mask()[reverse]
-            self.assertTrue(
-                np.array_equal(mask, new_mask),
-                "Algorithm is inconsistent - different features are selected after shuffle"
-            )
+            self._check_dataset_transformation(selector, dataset)
+            self._check_consistent(selector, dataset)
+            print('ok')
     print()
+
+    def _check_dataset_transformation(self, selector, dataset):
+        print('Checking dataset transformation...')
+        transformed = selector.transform(dataset)
+        self.assertEqual(
+            transformed.shape[0],
+            dataset.shape[0],
+            "Some samples were missed"
+        )
+        self.assertLess(
+            transformed.shape[1],
+            dataset.shape[1],
+            "Dimension wasn't reduced"
+        )
+
+    def _check_consistent(self, selector, dataset):
+        print('Checking consistency of feature selection...')
+        mask = selector._get_support_mask()
+        # Shuffle and reselect features
+        permutation = np.random.permutation(dataset.shape[1])
+        reverse = np.zeros(permutation.size, permutation.dtype)
+        reverse[permutation] = range(permutation.size)
+
+        selector = self.create_selector()
+        selector.fit(dataset[:, permutation])
+        new_mask = selector._get_support_mask()[reverse]
+        self.assertTrue(
+            np.array_equal(mask, new_mask),
+            "Algorithm is inconsistent - different features are selected after shuffle"
+        )
 
     @staticmethod
     def _load_dataset(name):

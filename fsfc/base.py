@@ -2,8 +2,9 @@ from abc import abstractmethod
 
 from sklearn.base import BaseEstimator
 from sklearn.feature_selection.base import SelectorMixin
-from sklearn.exceptions import NotFittedError
-import numpy as np
+from sklearn.base import ClusterMixin
+
+from fsfc.mixins import KBestSelectorMixin
 
 
 class BaseFeatureSelector(BaseEstimator, SelectorMixin):
@@ -17,7 +18,7 @@ class BaseFeatureSelector(BaseEstimator, SelectorMixin):
         pass
 
 
-class KBestFeatureSelector(BaseFeatureSelector):
+class KBestFeatureSelector(KBestSelectorMixin, BaseFeatureSelector):
     """
     Base class for algorithms that selects K best features according to some score.
 
@@ -34,12 +35,39 @@ class KBestFeatureSelector(BaseFeatureSelector):
     def fit(self, x, *rest):
         self.scores = self._calc_scores(x)
 
-    def _check_scores_set(self):
-        return self.scores is not None
+    def _get_k(self):
+        return self.k
 
-    def _get_support_mask(self):
-        if not self._check_scores_set():
-            raise NotFittedError('Feature Selector is not fitted')
-        mask = np.zeros(self.scores.shape, dtype=bool)
-        mask[np.argsort(self.scores, kind="mergesort")[-self.k:]] = 1
-        return mask
+    def _get_scores(self):
+        return self.scores
+
+
+class ClusteringFeatureSelector(KBestSelectorMixin, BaseFeatureSelector, ClusterMixin):
+    """
+    Clusters samples and simultaneously finds relevant features
+    """
+
+    def __init__(self, k):
+        self.k = k
+        self.scores = None
+        self.labels_ = None
+
+    @abstractmethod
+    def _calc_scores_and_labels(self, x):
+        """
+        Calculate scores and labels for samples
+
+        :rtype: tuple
+        """
+        pass
+
+    def fit(self, x, *rest):
+        scores, labels = self._calc_scores_and_labels(x)
+        self.scores = scores
+        self.labels_ = labels
+
+    def _get_scores(self):
+        return self.scores
+
+    def _get_k(self):
+        return self.k
