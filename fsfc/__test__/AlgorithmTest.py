@@ -20,13 +20,18 @@ class AlgorithmTest(unittest.TestCase):
     def create_selector(self):
         pass
 
-    def test_selector(self):
+    def setUp(self):
         print('Starting: ' + self.__class__.__name__)
+
+    def test_selector(self):
+        print('Testing that selector works on all datasets...')
         for dataset_name in DATASETS.keys():
             print('Testing on dataset with ' + dataset_name + ' dimensions')
             dataset = AlgorithmTest._load_dataset(dataset_name)
             selector = self.create_selector()
             selector.fit(dataset)
+            mask = selector._get_support_mask()
+
             transformed = selector.transform(dataset)
             self.assertEqual(
                 transformed.shape[0],
@@ -38,7 +43,20 @@ class AlgorithmTest(unittest.TestCase):
                 dataset.shape[1],
                 "Dimension wasn't reduced"
             )
-        print()
+
+            # Shuffle and reselect features
+            permutation = np.random.permutation(dataset.shape[1])
+            reverse = np.zeros(permutation.size, permutation.dtype)
+            reverse[permutation] = range(permutation.size)
+
+            selector = self.create_selector()
+            selector.fit(dataset[:, permutation])
+            new_mask = selector._get_support_mask()[reverse]
+            self.assertTrue(
+                np.array_equal(mask, new_mask),
+                "Algorithm is inconsistent - different features are selected after shuffle"
+            )
+    print()
 
     @staticmethod
     def _load_dataset(name):
