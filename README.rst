@@ -6,13 +6,15 @@ A library with algorithms for feature selection for clustering.
 
 Based on the paper "Feature Selection for Clustering" by S. Alelyani, J. Tang and H. Liu
 
-Uses high-dimentional datasets from 'http://cs.uef.fi/sipu/datasets/' for testing
+Uses high-dimensional datasets from http://cs.uef.fi/sipu/datasets/ for testing
 
-Implemeted algorithms:
+Implemented algorithms:
+
 - SPEC family - NormalizedCut, ArbitraryClustering, FixedClustering
-- Sparse clusterin - Lasso
+- Sparse clustering - Lasso
 
 Reference:
+
 - Alelyani, Salem, Jiliang Tang, and Huan Liu. "Feature Selection for Clustering: A Review."
     Data Clustering: Algorithms and Applications 29 (2013): 110-121.
 - Zhao, Zheng, and Huan Liu. "Spectral feature selection for supervised and unsupervised learning."

@@ -1,5 +1,7 @@
 import unittest
 import numpy as np
+from sklearn.cluster import KMeans
+from sklearn.metrics.cluster import silhouette_score, calinski_harabaz_score
 from abc import abstractmethod
 
 # Uses datasets from downloaded from http://cs.uef.fi/sipu/datasets/
@@ -52,6 +54,7 @@ class AlgorithmTest(unittest.TestCase):
             dataset.shape[1],
             "Dimension wasn't reduced"
         )
+        self._check_silhouette(dataset, transformed)
 
     def _check_consistent(self, selector, dataset):
         print('Checking consistency of feature selection...')
@@ -67,6 +70,23 @@ class AlgorithmTest(unittest.TestCase):
         self.assertTrue(
             np.array_equal(mask, new_mask),
             "Algorithm is inconsistent - different features are selected after shuffle"
+        )
+
+    def _check_silhouette(self, dataset, transformed):
+        expected = KMeans().fit_predict(dataset)
+        got = KMeans().fit_predict(transformed)
+
+        print(
+            "Silhouette Index: expected:",
+            silhouette_score(dataset, expected),
+            "got:",
+            silhouette_score(dataset, got)
+        )
+        print(
+            "Calinski-Harabaz Index: expected:",
+            calinski_harabaz_score(dataset, expected),
+            "got:",
+            calinski_harabaz_score(dataset, got)
         )
 
     @staticmethod

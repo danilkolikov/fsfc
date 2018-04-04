@@ -15,7 +15,7 @@ class BaseFeatureSelector(BaseEstimator, SelectorMixin):
     """
     @abstractmethod
     def fit(self, x, *rest):
-        pass
+        return self
 
 
 class KBestFeatureSelector(KBestSelectorMixin, BaseFeatureSelector):
@@ -34,6 +34,7 @@ class KBestFeatureSelector(KBestSelectorMixin, BaseFeatureSelector):
 
     def fit(self, x, *rest):
         self.scores = self._calc_scores(x)
+        return self
 
     def _get_k(self):
         return self.k
@@ -65,6 +66,7 @@ class ClusteringFeatureSelector(KBestSelectorMixin, BaseFeatureSelector, Cluster
         scores, labels = self._calc_scores_and_labels(x)
         self.scores = scores
         self.labels_ = labels
+        return self
 
     def _get_scores(self):
         return self.scores
