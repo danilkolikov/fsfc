@@ -19,5 +19,7 @@ Reference:
     Data Clustering: Algorithms and Applications 29 (2013): 110-121.
 - Zhao, Zheng, and Huan Liu. "Spectral feature selection for supervised and unsupervised learning."
     Proceedings of the 24th international conference on Machine learning. ACM, 2007.
-- D.M. Witten and R. Tibshirani. A framework for feature selection in clustering. Journal
-    of the American Statistical Association, 105(490):713–726, 2010.
+- D.M. Witten and R. Tibshirani. "A framework for feature selection in clustering."
+    Journal of the American Statistical Association, 105(490):713–726, 2010.
+- Li, Yuanhong, Ming Dong, and Jing Hua. "Localized feature selection for clustering."
+    Pattern Recognition Letters 29.1 (2008): 10-18.
