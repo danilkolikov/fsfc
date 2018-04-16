@@ -14,6 +14,7 @@ Implemented algorithms:
 - Sparse clustering - Lasso
 - Localised feature selection - LFSBSS algorithm
 - Multi-Cluster Feature Selection
+- Weighted K-means
 
 Reference:
 
@@ -27,3 +28,5 @@ Reference:
     Pattern Recognition Letters 29.1 (2008): 10-18.
 - Cai, Deng, Chiyuan Zhang, and Xiaofei He. "Unsupervised feature selection for multi-cluster data."
     Proceedings of the 16th ACM SIGKDD international conference on Knowledge discovery and data mining. ACM, 2010.
+- Huang, Joshua Zhexue, et al. "Automated variable weighting in k-means type clustering."
+    IEEE Transactions on Pattern Analysis and Machine Intelligence 27.5 (2005): 657-668.
