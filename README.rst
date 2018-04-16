@@ -12,6 +12,8 @@ Implemented algorithms:
 
 - SPEC family - NormalizedCut, ArbitraryClustering, FixedClustering
 - Sparse clustering - Lasso
+- Localised feature selection - LFSBSS algorithm
+- Multi-Cluster Feature Selection
 
 Reference:
 
@@ -23,3 +25,5 @@ Reference:
     Journal of the American Statistical Association, 105(490):713–726, 2010.
 - Li, Yuanhong, Ming Dong, and Jing Hua. "Localized feature selection for clustering."
     Pattern Recognition Letters 29.1 (2008): 10-18.
+- Cai, Deng, Chiyuan Zhang, and Xiaofei He. "Unsupervised feature selection for multi-cluster data."
+    Proceedings of the 16th ACM SIGKDD international conference on Knowledge discovery and data mining. ACM, 2010.

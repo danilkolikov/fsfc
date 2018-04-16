@@ -6,7 +6,7 @@ CLUSTERS_COUNT = 5
 
 
 class LassoTest(AlgorithmTest):
-    def create_selector(self):
+    def create_selector(self, dataset_size):
         return Lasso(FEATURES_COUNT, CLUSTERS_COUNT)
 
     def _check_consistent(self, selector, dataset):

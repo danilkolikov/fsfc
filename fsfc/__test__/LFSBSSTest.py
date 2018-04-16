@@ -5,7 +5,7 @@ CLUSTERS_COUNT = 5
 
 
 class LFSBSSTest(AlgorithmTest):
-    def create_selector(self):
+    def create_selector(self, dataset_size):
         return LFSBSS(CLUSTERS_COUNT)
 
     def _check_dataset_transformation(self, selector, dataset):

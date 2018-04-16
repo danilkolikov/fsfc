@@ -19,7 +19,7 @@ DATASETS = {
 class AlgorithmTest(unittest.TestCase):
 
     @abstractmethod
-    def create_selector(self):
+    def create_selector(self, dataset_size):
         """
         :rtype: Selector
         """
@@ -33,7 +33,7 @@ class AlgorithmTest(unittest.TestCase):
         for dataset_name in DATASETS.keys():
             print('Testing on dataset with ' + dataset_name + ' dimensions')
             dataset = AlgorithmTest._load_dataset(dataset_name)
-            selector = self.create_selector()
+            selector = self.create_selector(dataset.shape[0])
             selector.fit(dataset)
 
             self._check_dataset_transformation(selector, dataset)
@@ -64,7 +64,7 @@ class AlgorithmTest(unittest.TestCase):
         reverse = np.zeros(permutation.size, permutation.dtype)
         reverse[permutation] = range(permutation.size)
 
-        selector = self.create_selector()
+        selector = self.create_selector(dataset.shape[0])
         selector.fit(dataset[:, permutation])
         new_mask = selector._get_support_mask()[reverse]
         self.assertTrue(
