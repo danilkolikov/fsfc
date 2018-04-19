@@ -41,22 +41,22 @@ class WKMeans(ClusteringFeatureSelector):
             centroids = k_means.cluster_centers_ / divider
 
             d = np.zeros(x.shape[1])
-            for i in range(d.size):
-                d[i] = 0
+            for k in range(d.size):
+                d[k] = 0
                 for j in range(x.shape[0]):
-                    d[i] += abs(x[j][i] - centroids[clusters[j]][i])
+                    d[k] += abs(x[j][k] - centroids[clusters[j]][k])
             new_weights = np.zeros(weights.size)
             if self.beta == 1:
                 new_weights[np.argmin(d)] = 1
             else:
-                for i in range(new_weights.size):
-                    if abs(d[i]) < self.eps:
+                for k in range(new_weights.size):
+                    if abs(d[k]) < self.eps:
                         continue
                     for current_d in d:
                         if abs(current_d) < self.eps:
                             continue
-                        new_weights[i] += (d[i] / current_d) ** (1 / (self.beta - 1))
-                    new_weights[i] = 1 / new_weights[i]
+                        new_weights[k] += (d[k] / current_d) ** (1 / (self.beta - 1))
+                    new_weights[k] = 1 / new_weights[k]
             weights = new_weights
             modified_x = x * weights ** self.beta
             clusters = k_means.fit_predict(modified_x)
@@ -64,7 +64,6 @@ class WKMeans(ClusteringFeatureSelector):
             if abs(new_score - old_score) < self.eps:
                 break
             old_score = new_score
-            print(old_score)
         return weights, clusters
 
     @staticmethod

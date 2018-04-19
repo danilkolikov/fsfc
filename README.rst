@@ -6,7 +6,8 @@ A library with algorithms for feature selection for clustering.
 
 Based on the paper "Feature Selection for Clustering" by S. Alelyani, J. Tang and H. Liu
 
-Uses high-dimensional datasets from http://cs.uef.fi/sipu/datasets/ for testing
+Uses high-dimensional points datasets downloaded from http://cs.uef.fi/sipu/datasets/
+and text dataset https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection for testing
 
 Implemented algorithms:
 
@@ -15,6 +16,7 @@ Implemented algorithms:
 - Localised feature selection - LFSBSS algorithm
 - Multi-Cluster Feature Selection
 - Weighted K-means
+- Text clustering - Chi-R algorithm
 
 Reference:
 
@@ -30,3 +32,5 @@ Reference:
     Proceedings of the 16th ACM SIGKDD international conference on Knowledge discovery and data mining. ACM, 2010.
 - Huang, Joshua Zhexue, et al. "Automated variable weighting in k-means type clustering."
     IEEE Transactions on Pattern Analysis and Machine Intelligence 27.5 (2005): 657-668.
+- Li, Yanjun, Congnan Luo, and Soon M. Chung. "Text clustering with feature selection by using statistical data."
+    IEEE Transactions on knowledge and Data Engineering 20.5 (2008): 641-652.
