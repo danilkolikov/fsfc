@@ -4,3 +4,4 @@ from .LFSBSSTest import LFSBSSTest
 from .MCFSTest import MCFSTest
 from .WKMeansTest import WKMeansTest
 from .CHIRTest import CHIRTest
+from .FTCTest import FTCTest

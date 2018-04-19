@@ -16,7 +16,8 @@ Implemented algorithms:
 - Localised feature selection - LFSBSS algorithm
 - Multi-Cluster Feature Selection
 - Weighted K-means
-- Text clustering - Chi-R algorithm
+- Text clustering - Chi-R algorithm, Feature Set-Based Clustering (FTC)
+- Frequent itemset extraction - Apriori
 
 Reference:
 
@@ -34,3 +35,7 @@ Reference:
     IEEE Transactions on Pattern Analysis and Machine Intelligence 27.5 (2005): 657-668.
 - Li, Yanjun, Congnan Luo, and Soon M. Chung. "Text clustering with feature selection by using statistical data."
     IEEE Transactions on knowledge and Data Engineering 20.5 (2008): 641-652.
+- Agrawal, Rakesh, and Ramakrishnan Srikant. "Fast algorithms for mining association rules."
+    Proc. 20th int. conf. very large data bases, VLDB. Vol. 1215. 1994.
+Beil, Florian, Martin Ester, and Xiaowei Xu. "Frequent term-based text clustering."
+    Proceedings of the eighth ACM SIGKDD international conference on Knowledge discovery and data mining. ACM, 2002.
