@@ -2,7 +2,7 @@
 Feature Selection for Clustering
 ================================
 
-|mit|
+|mit| |docs|
 
 **FSFC** is a library with algorithms of feature selection for clustering.
 
@@ -15,6 +15,7 @@ For testing we use open datasets:
 - Generic data - `High-dimensional points datasets <http://cs.uef.fi/sipu/datasets/>`_
 - Text data - `SMS Spam Collection <https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection>`_
 
+Project documentation is available on `Read the Docs <http://fsfc.readthedocs.io/en/latest/>`_
 
 Implemented algorithms:
 -----------------------
@@ -69,7 +70,8 @@ You can support development by testing and reporting of bugs or opening pull-req
 
 Project has tests, they can be run with the command ``make test``
 
-Also code there is a Sphinx documentation for code, it can be built with the command ``make html``
+Also code there is a Sphinx documentation for code, it can be built with the command ``make html``.
+Documentation uses ``numpydoc``, so it should be installed on the system. To do it, run ``pip install numpydoc``.
 
 References:
 -----------
@@ -94,3 +96,6 @@ References:
     Proceedings of the eighth ACM SIGKDD international conference on Knowledge discovery and data mining. ACM, 2002.
 
 .. |mit| image:: https://img.shields.io/github/license/mashape/apistatus.svg
+.. |docs| image:: https://readthedocs.org/projects/fsfc/badge/?version=latest
+    :target: http://fsfc.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
