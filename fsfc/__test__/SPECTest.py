@@ -1,5 +1,5 @@
 from .AlgorithmTest import AlgorithmTest
-from ..SPEC import NormalizedCut, ArbitraryClustering, FixedClustering
+from fsfc.generic.SPEC import NormalizedCut, GenericSPEC, FixedSPEC
 
 FEATURES_COUNT = 20
 CLUSTERS_COUNT = 5
@@ -12,9 +12,9 @@ class NormalizedCutTest(AlgorithmTest):
 
 class ArbitraryClusteringTest(AlgorithmTest):
     def create_selector(self, dataset_size):
-        return ArbitraryClustering(FEATURES_COUNT)
+        return GenericSPEC(FEATURES_COUNT)
 
 
 class FixedClusteringTest(AlgorithmTest):
     def create_selector(self, dataset_size):
-        return FixedClustering(FEATURES_COUNT, CLUSTERS_COUNT)
+        return FixedSPEC(FEATURES_COUNT, CLUSTERS_COUNT)

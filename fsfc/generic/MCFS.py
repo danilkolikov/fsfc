@@ -3,7 +3,7 @@ import math
 from sklearn.neighbors import kneighbors_graph
 from sklearn.linear_model import LassoLars, Lars
 from scipy.linalg import eigh
-from .base import KBestFeatureSelector
+from fsfc.base import KBestFeatureSelector
 
 
 class MCFS(KBestFeatureSelector):

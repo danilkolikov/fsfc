@@ -1,5 +1,5 @@
 from .AlgorithmTest import AlgorithmTest
-from ..LFSBSS import LFSBSS
+from fsfc.generic.LFSBSS import LFSBSS
 
 CLUSTERS_COUNT = 5
 

@@ -1,5 +1,5 @@
 from .AlgorithmTest import AlgorithmTest, DatasetType
-from ..FTC import FTC
+from fsfc.text.FTC import FTC
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 

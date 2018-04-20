@@ -1,5 +1,5 @@
 from .AlgorithmTest import AlgorithmTest
-from ..WKMeans import WKMeans
+from fsfc.generic.WKMeans import WKMeans
 
 CLUSTERS_COUNT = 4
 BETA = 1

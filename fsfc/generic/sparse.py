@@ -3,7 +3,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics.pairwise import euclidean_distances
 from scipy.optimize import fixed_point
 
-from .base import ClusteringFeatureSelector
+from fsfc.base import ClusteringFeatureSelector
 
 
 class Lasso(ClusteringFeatureSelector):

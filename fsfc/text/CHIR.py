@@ -1,5 +1,5 @@
 import numpy as np
-from .base import KBestFeatureSelector
+from fsfc.base import KBestFeatureSelector
 from sklearn.cluster import KMeans
 
 

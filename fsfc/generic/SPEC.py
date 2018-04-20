@@ -3,7 +3,7 @@ from abc import abstractmethod
 import numpy as np
 from sklearn.metrics.pairwise import rbf_kernel, cosine_similarity
 
-from .base import KBestFeatureSelector
+from fsfc.base import KBestFeatureSelector
 
 
 class SPEC(KBestFeatureSelector):
@@ -49,7 +49,7 @@ class NormalizedCut(SPEC):
         return np.diag(all_to_all)
 
 
-class ArbitraryClustering(NormalizedCut):
+class GenericSPEC(NormalizedCut):
     """
     Feature selection algorithm that uses spectral graph theory to find features with the best separability.
     """
@@ -63,7 +63,7 @@ class ArbitraryClustering(NormalizedCut):
         return normalised_cut / norm
 
 
-class FixedClustering(SPEC):
+class FixedSPEC(SPEC):
     """
     Feature selection algorithm that uses spectral graph theory to find features with the best separability
     in assumption that points are separated to fixed number of clusters

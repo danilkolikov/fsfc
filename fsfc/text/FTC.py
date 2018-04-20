@@ -2,8 +2,8 @@ from math import log2, inf
 
 import numpy as np
 
-from .base import ClusteringFeatureSelector
-from .utils.apriori import apriori
+from fsfc.base import ClusteringFeatureSelector
+from fsfc.utils import apriori
 
 
 class FTC(ClusteringFeatureSelector):

@@ -1,5 +1,5 @@
 from .AlgorithmTest import AlgorithmTest
-from ..sparse import Lasso
+from fsfc.generic.sparse import Lasso
 
 FEATURES_COUNT = 20
 CLUSTERS_COUNT = 5

@@ -1,5 +1,5 @@
 from .AlgorithmTest import AlgorithmTest, DatasetType
-from ..CHIR import CHIR
+from fsfc.text.CHIR import CHIR
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 

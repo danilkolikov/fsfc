@@ -1,5 +1,5 @@
 from .AlgorithmTest import AlgorithmTest
-from ..MCFS import MCFS
+from fsfc.generic.MCFS import MCFS
 
 FEATURES_COUNT = 20
 CLUSTERS_COUNT = 4

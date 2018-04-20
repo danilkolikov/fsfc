@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.metrics import euclidean_distances
 
-from .base import BaseEstimator, ClusterMixin
+from fsfc.base import BaseEstimator, ClusterMixin
 
 
 class LFSBSS(BaseEstimator, ClusterMixin):

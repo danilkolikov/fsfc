@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.cluster import KMeans
-from .base import ClusteringFeatureSelector
+from fsfc.base import ClusteringFeatureSelector
 
 
 class WKMeans(ClusteringFeatureSelector):
