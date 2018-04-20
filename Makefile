@@ -3,3 +3,6 @@ init:
 
 test:
 	python3 -m unittest
+
+html:
+	make html -C docs
