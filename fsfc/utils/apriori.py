@@ -60,21 +60,23 @@ def apriori(dataset, minspan):
     Apriori algorithm by Rakesh Agrawal and Ramakrishnan Srikant
 
     Finds all frequent itemsets in the dataset with specified minspan.
-    Itemset is a set of elements which appears in not less that minspan-part of the dataset
+    Itemset is a set of elements which appears in not less that minspan-part of the dataset.
+
+    Based on the article `"Fast algorithms for mining association rules." <http://www.vldb.org/conf/1994/P487.PDF>`_.
 
     Parameters
     ----------
     dataset: list
         List of size n_samples whose elements are sets of integers.
-        Each set represents a sample from the dataset
+        Each set represents a sample from the dataset.
     minspan: float
         MinSpan value. Algorithm will select sets of items that appear in not less
-        than (MinSpan * n_samples) samples
+        than (MinSpan * n_samples) samples.
 
     Returns
     -------
     itemsets: list
-        List of frequent itemsets. Every itemset is a list of integers in increasing order
+        List of frequent itemsets. Every itemset is a list of integers in increasing order.
     """
 
     n_samples = len(dataset)
