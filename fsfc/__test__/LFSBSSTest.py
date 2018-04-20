@@ -5,6 +5,10 @@ CLUSTERS_COUNT = 5
 
 
 class LFSBSSTest(AlgorithmTest):
+    def prepare_dataset(self, dataset):
+        print('Select 50 first features, because algorithm can barely handle bigger dimensionality')
+        return super().prepare_dataset(dataset)[:, :50]
+
     def create_selector(self, dataset_size):
         return LFSBSS(CLUSTERS_COUNT)
 

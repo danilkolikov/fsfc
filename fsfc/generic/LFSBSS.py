@@ -63,6 +63,7 @@ class LFSBSS(BaseEstimator, ClusterMixin):
         self: LFSBSS
             Returns itself to support chaining
         """
+
         n_samples, n_features = x.shape
         # Build initial clustering
         k_means = KMeans(n_clusters=self.clusters)
