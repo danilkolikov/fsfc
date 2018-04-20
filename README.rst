@@ -2,7 +2,9 @@
 Feature Selection for Clustering
 ================================
 
-A library with algorithms for feature selection for clustering.
+|mit|
+
+**FSFC** is a library with algorithms of feature selection for clustering.
 
 Based on the paper "Feature Selection for Clustering" by S. Alelyani, J. Tang and H. Liu
 
@@ -10,16 +12,27 @@ Uses high-dimensional points datasets downloaded from http://cs.uef.fi/sipu/data
 and text dataset https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection for testing
 
 Implemented algorithms:
+-----------------------
 
-- SPEC family - NormalizedCut, ArbitraryClustering, FixedClustering
-- Sparse clustering - Lasso
-- Localised feature selection - LFSBSS algorithm
-- Multi-Cluster Feature Selection
-- Weighted K-means
-- Text clustering - Chi-R algorithm, Feature Set-Based Clustering (FTC)
-- Frequent itemset extraction - Apriori
+- Generic Data:
+    - SPEC family - NormalizedCut, ArbitraryClustering, FixedClustering
+    - Sparse clustering - Lasso
+    - Localised feature selection - LFSBSS algorithm
+    - Multi-Cluster Feature Selection
+    - Weighted K-means
+- Text Data:
+    - Text clustering - Chi-R algorithm, Feature Set-Based Clustering (FTC)
+    - Frequent itemset extraction - Apriori
 
-Reference:
+Dependencies:
+-------------
+
+- numpy
+- scikit-learn
+- scipy
+
+References:
+-----------
 
 - Alelyani, Salem, Jiliang Tang, and Huan Liu. "Feature Selection for Clustering: A Review."
     Data Clustering: Algorithms and Applications 29 (2013): 110-121.
@@ -37,5 +50,7 @@ Reference:
     IEEE Transactions on knowledge and Data Engineering 20.5 (2008): 641-652.
 - Agrawal, Rakesh, and Ramakrishnan Srikant. "Fast algorithms for mining association rules."
     Proc. 20th int. conf. very large data bases, VLDB. Vol. 1215. 1994.
-Beil, Florian, Martin Ester, and Xiaowei Xu. "Frequent term-based text clustering."
+- Beil, Florian, Martin Ester, and Xiaowei Xu. "Frequent term-based text clustering."
     Proceedings of the eighth ACM SIGKDD international conference on Knowledge discovery and data mining. ACM, 2002.
+
+.. |mit| image:: https://img.shields.io/github/license/mashape/apistatus.svg

@@ -8,16 +8,36 @@ from fsfc.base import KBestFeatureSelector
 
 class SPEC(KBestFeatureSelector):
     """
-    SPEC feature selection algorithm
+    SPEC-family of feature selection algorithms.
 
-    Creates graph representation of how samples are distributed in a high-dimensional space and
-    uses Spectral Graph Theory to calculate metrics
+    Every algorithm of this family creates graph representation of distribution of samples in a high-dimensional space.
+    Samples becomes vertices and RBF-distance between them becomes weight of the edge. Algorithms use Spectral Graph
+    Theory to calculate features scores.
 
-    Based on http://www.public.asu.edu/~huanliu/papers/icml07.pdf
+    Based on the article `"Spectral feature selection for supervised and unsupervised learning." <http://www.public.asu.edu/~huanliu/papers/icml07.pdf>`_.
     """
 
     @abstractmethod
     def _calc_spec_scores(self, degree, laplacian, normalised_features, normaliser):
+        """
+        Calculate SPEC scores for the method
+
+        Parameters
+        ----------
+        degree: ndarray
+            Degree matrix of the graph
+        laplacian: ndarray
+            Laplacian of the graph
+        normalised_features: ndarray
+            Feature vectors, normalised by normaliser
+        normaliser: ndarray
+            Vector computed by the degree matrix and used for normalisation of feature vectors and laplacian
+
+        Returns
+        -------
+        scores: ndarray
+            Scores of features
+        """
         pass
 
     def _calc_scores(self, x):
@@ -39,11 +59,19 @@ class SPEC(KBestFeatureSelector):
 
 class NormalizedCut(SPEC):
     """
-    Feature selection algorithm that represents samples as vertices of graph. Weight of edges of this graph are
-    equal to distances between points. Algorithm attempts to find minimal cut in this graph.
+    Feature selection algorithm that represents samples as vertices of graph.
+    Weights of edges of this graph are equal to RBF-distances between points.
+    Algorithm attempts to find minimal cut in this graph.
 
-    Features that were `separated` by it are considered better for clustering
+    Algorithm selects k features which were `separated` by this cut as they are considered to be better for explanation
+    of the dataset.
+
+    Parameters
+    ----------
+    k: int
+        Number of features to select
     """
+
     def _calc_spec_scores(self, degree, laplacian, normalised_features, normaliser):
         all_to_all = normalised_features.transpose().dot(laplacian).dot(normalised_features)
         return np.diag(all_to_all)
@@ -51,8 +79,23 @@ class NormalizedCut(SPEC):
 
 class GenericSPEC(NormalizedCut):
     """
-    Feature selection algorithm that uses spectral graph theory to find features with the best separability.
+    Feature selection algorithm that represents samples as vertices of graph.
+    Weights of edges of this graph are equal to RBF-distances between points.
+
+    Algorithm uses Spectral Graph Theory to find features with the best separability.
+
+    To do this, algorithm finds the trivial eugenvector of the Laplacian of the graph and uses it to
+    normalise scores computed using :class:`NormalizedCut`. Such normalisation helps to improve
+    accuracy of feature selection according to the article SPEC family is based on.
+
+    Algorithm selects top k features according to this scores
+
+    Parameters
+    ----------
+    k: int
+        Number of features to select
     """
+
     def _calc_spec_scores(self, degree, laplacian, normalised_features, normaliser):
         normalised_cut = super()._calc_spec_scores(
             degree, laplacian, normalised_features, normaliser
@@ -65,8 +108,22 @@ class GenericSPEC(NormalizedCut):
 
 class FixedSPEC(SPEC):
     """
-    Feature selection algorithm that uses spectral graph theory to find features with the best separability
-    in assumption that points are separated to fixed number of clusters
+    Feature selection algorithm that represents samples as vertices of graph.
+    Weights of edges of this graph are equal to RBF-distances between points.
+
+    Algorithm uses Spectral Graph Theory to find features with the best separability in assumption that
+    points are separated to the predefined number of clusters
+
+    To do this, algorithm finds eigenvectors corresponding to K smallest eigenvalues of the Laplacian of the graph,
+    except the trivial one, and uses cosine distance between them and feature vectors to detect the most explaining
+    features. Algorithm selects k features using this score.
+
+    Parameters
+    ----------
+    k: int
+        Number of features to select
+    clusters: int
+        Expected number of clusters
     """
     def __init__(self, k, clusters):
         super().__init__(k)

@@ -8,32 +8,60 @@ from fsfc.base import ClusteringFeatureSelector
 
 class Lasso(ClusteringFeatureSelector):
     """
-    Feature selection and clustering algorithm, based on idea of Tibshirani's lasso
+    Feature selection and clustering algorithm exploting the idea of L1-norm
 
     Simultaneously does clustering and computes "importance" of each feature for it
 
-    Based on https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2930825/
+    Based on the article `"A framework for feature selection in clustering." <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2930825/>`_
+
+    Algorithm does clustering and selects features in the following way:
+        1. Assigns equal weights to every feature
+        2. Finds clusters according to weights of features
+        3. Computes objective of the method
+        4. Optimizes L1-penalty for found objective
+        5. Computes new feature weights using objective
+        6. If new weights equal to the old ones, break. Otherwise repeat steps 2-6
+        7. Select top k features according to weights
+
+    Parameters
+    ----------
+    k: int
+        Number of features to select
+    norm_constraint: float
+        Constraint of L1-norm
+    eps: float (default 1e-4)
+        Precision of the algorithm
+    max_iterations: int (default 100)
+        Maximal number of iterations of algorithm
     """
-    def __init__(self, k, norm_constraint, iterations=100):
+    def __init__(self, k, norm_constraint, eps=1e-4, max_iterations=100):
         super().__init__(k)
         self.norm_constraint = norm_constraint
-        self.iterations = iterations
+        self.max_iterations = max_iterations
+        self.eps = eps
 
     def _calc_scores_and_labels(self, x):
+        # Assign equal weights to features
         feature_weights = np.full([1, x.shape[1]], 1/np.sqrt(x.shape[1]))
         labels = None
-        for it in range(self.iterations):
+        for it in range(self.max_iterations):
+            # Find clusters in the feature space, normalised by weights
             weighted_samples = feature_weights * x
             labels = KMeans().fit_predict(weighted_samples)
+
+            # Compute objective vector of the method
             objective = Lasso._calc_objective_vector(x, labels)
+
+            # Find parameter of threshold that optimizes L1-norm
             root = fixed_point(
                 lambda delta: self._function_to_optimize(objective, delta),
                 0
             )
-            old_weights = feature_weights.copy()
-            feature_weights = Lasso._calc_new_feature_weights(objective, root)
-            if np.linalg.norm(feature_weights - old_weights) < 1e4:
+            # Compute new feature weights
+            new_weights = Lasso._calc_new_feature_weights(objective, root)
+            if np.linalg.norm(new_weights - feature_weights) < self.eps:
                 break
+            feature_weights = new_weights
         return feature_weights[0], labels
 
     @staticmethod

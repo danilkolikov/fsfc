@@ -6,6 +6,7 @@ from abc import abstractmethod
 from enum import Enum
 
 DATASETS_FOLDER = 'fsfc/__test__/datasets/'
+
 # Uses highly-dimensional points datasets downloaded from http://cs.uef.fi/sipu/datasets/
 DATASETS = {
     '32': 'dim032.txt',
@@ -15,6 +16,7 @@ DATASETS = {
     '512': 'dim512.txt',
     '1024': 'dim1024.txt',
 }
+
 # Uses text datasets downloaded from https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection
 TEXT_DATASETS = {
     'SMS': 'SMSSpamCollection',

@@ -15,6 +15,7 @@ def _find_frequent_itemsets(itemsets, dataset, required_amount):
 
 
 def _next_itemsets(itemsets):
+    # Find next itemsets based on previously found ones
     # Split every itemset to 2 parts - 1 element and rest. Save them to dictionary
     subsets = {}
     for itemset in itemsets:
@@ -61,10 +62,21 @@ def apriori(dataset, minspan):
     Finds all frequent itemsets in the dataset with specified minspan.
     Itemset is a set of elements which appears in not less that minspan-part of the dataset
 
-    :param dataset: List whose elements are set of integers representing items
-    :param minspan: Minspan value
-    :return: List of frequent itemsets. Every itemset is a list of integers in increasing order
+    Parameters
+    ----------
+    dataset: list
+        List of size n_samples whose elements are sets of integers.
+        Each set represents a sample from the dataset
+    minspan: float
+        MinSpan value. Algorithm will select sets of items that appear in not less
+        than (MinSpan * n_samples) samples
+
+    Returns
+    -------
+    itemsets: list
+        List of frequent itemsets. Every itemset is a list of integers in increasing order
     """
+
     n_samples = len(dataset)
     required_amount = int(n_samples * minspan)
     all_items = set(item for sample in dataset for item in sample)

@@ -3,10 +3,12 @@ Methods for generic data
 
 FSFC contains implementation of some feature selection algorithms working with generic data.
 
-Every algorithm can be imported either from it's package or from the `fsfc.generic` module
+Every algorithm can be imported either from it's package or from the :mod:`fsfc.generic` module
 
 SPEC algorithm family
 ---------------------
+Family of algorithm based on the Spectral Graph Theory
+
 .. automodule:: fsfc.generic.SPEC
 
 

@@ -5,23 +5,52 @@ from sklearn.exceptions import NotFittedError
 
 
 class ScoreSelectorMixin:
+    """
+    Mixin that adds getter for calculation of scores of features and checks that scores are calculated
+    """
+
     @abstractmethod
     def _get_scores(self):
         """
         Get calculated scores for features
 
-        :rtype: ndarray
+        Returns
+        ------
+        scores: ndarray
+            Numpy Array with length equal to the initial number of features in dataset. Every element
+            of the array is the score of this feature
         """
         pass
 
     def _check_scores_set(self):
+        """
+        Checks that scores for features are computed
+
+        Returns
+        -------
+        check: bool
+            Flag that indicates that scores are computed
+        """
+
         return self._get_scores() is not None
 
 
 class ThresholdSelectorMixin(ScoreSelectorMixin):
+    """
+    Mixin that selects features according to some threshold. That means that
+    all features whose score is higher than threshold are selected
+    """
 
     @abstractmethod
     def _get_threshold(self):
+        """
+        Get the value of threshold
+
+        Returns
+        -------
+        threshold: float
+            The value of threshold
+        """
         pass
 
     def _get_support_mask(self):
@@ -31,9 +60,20 @@ class ThresholdSelectorMixin(ScoreSelectorMixin):
 
 
 class KBestSelectorMixin(ScoreSelectorMixin):
+    """
+    Mixin that selects K best features according to their scores
+    """
 
     @abstractmethod
     def _get_k(self):
+        """
+        Get number of features to select
+
+        Returns
+        -------
+        k: int
+            Number of features to select
+        """
         pass
 
     def _get_support_mask(self):

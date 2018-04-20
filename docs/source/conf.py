@@ -24,7 +24,7 @@ copyright = '2018, Danil Kolikov'
 author = 'Danil Kolikov'
 
 # The short X.Y version
-version = ''
+version = '0.0.1'
 # The full version, including alpha/beta/rc tags
 release = ''
 
@@ -46,6 +46,7 @@ extensions = [
     'sphinx.ext.imgmath',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
+    'numpydoc',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -164,9 +165,14 @@ texinfo_documents = [
 
 # -- Extension configuration -------------------------------------------------
 autodoc_default_flags = ['members', 'undoc-members', 'show-inheritance']
-
+numpydoc_class_members_toctree = False
 
 # -- Options for intersphinx extension ---------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = {
+    'python': ('http://docs.python.org/', None),
+    'numpy': ('http://docs.scipy.org/doc/numpy/', None),
+    'sklearn': ('http://scikit-learn.org/stable', None),
+    'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
+}

@@ -8,14 +8,47 @@ from fsfc.utils import apriori
 
 class FTC(ClusteringFeatureSelector):
     """
-    Frequent Terms-based Clustering
+    Frequent Terms-based Clustering algorithm. Uses frequent termsets to find clusters and simultaneously
+    select features which determine every cluster.
 
-    Based on http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.12.7997&rep=rep1&type=pdf
+    Based on the article `"Frequent term-based text clustering" <http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.12.7997&rep=rep1&type=pdf>`_.
+
+    **FTS** is a set of terms that appear in some part of all samples in dataset. We will say that FTS
+    *covers* sample if every term of FTS is contained in the sample.
+
+    Algorithm does clustering in the following way:
+        1. Find all FTS for dataset with specified *minsup*. Elements of FTS are terms, i.e. features of dataset.
+        2. Find FTS that has the lowest Entropy Overlap with the rest clusters with respect to dataset.
+           It's shown in the paper that such FTS will explain data the best.
+        3. Add this FTS to clustering, remove from dataset samples covered by it, repeat steps 2 and 3.
+        4. Assign clusters to samples. Sample belongs to a cluster defined by FTS if FTS covers sample.
+        5. Scores of features are 1 if feature belongs to any FTS and 0 otherwise.
+
+    Parameters
+    ----------
+    minsup: float
+        Part of the dataset which should be covered by each FTS.
     """
 
     def __init__(self, minsup):
         super().__init__(-1)
         self.minsup = minsup
+
+    def fit(self, x, *rest):
+        """
+        Fit algorithm to dataset, find clusters and select relevant features.
+
+        Parameters
+        ----------
+        x: csr_matrix
+            SciPy Sparse Matrix representing terms contained in every sample. May be created by vectorizers from sklearn.
+
+        Returns
+        -------
+        self: FTC
+            Returns itself to support chaining.
+        """
+        return super().fit(x, *rest)
 
     def _calc_scores_and_labels(self, x):
         n_samples, n_features = x.get_shape()
@@ -70,6 +103,21 @@ class FTC(ClusteringFeatureSelector):
 
     @staticmethod
     def _calculate_coverage(clusters, dataset):
+        """
+        Finds samples of dataset covered by clusters
+
+        Parameters
+        ----------
+        clusters: list
+            List of FTS defining clusters
+        dataset: list
+            List of sets defining samples
+
+        Returns
+        -------
+        covered: list
+            List of samples covered by clusters
+        """
         # Find samples covered by specified clusters
         covered = []
         for sample in dataset:
@@ -81,6 +129,23 @@ class FTC(ClusteringFeatureSelector):
 
     @staticmethod
     def _calculate_overlap(cluster, rest, dataset):
+        """
+        Calculates Entropy Overlap of cluster with rest FTS
+
+        Parameters
+        ----------
+        cluster: set
+            Termset defining cluster
+        rest: list
+            List of other termsets
+        dataset: list
+            List of sets defining samples
+
+        Returns
+        -------
+        overlap: float
+            Value of overlap of cluster with the rest of clusters
+        """
         f = [0 for _ in dataset]
         # Calculate how much clusters from `rest` cover each sample
         for i in range(len(dataset)):

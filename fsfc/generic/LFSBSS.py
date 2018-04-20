@@ -7,39 +7,78 @@ from fsfc.base import BaseEstimator, ClusterMixin
 
 class LFSBSS(BaseEstimator, ClusterMixin):
     """
-    Localised Feature Selection, Based on Scattered Separability
+    Localised Feature Selection, Based on Scattered Separability.
 
     Selects features and simultaneously builds clustering in an iterative way.
     Every cluster has it's local set of selected features, and we project input data
-    to a subspace defined by it to predict cluster of a point
+    to a subspace defined by it to predict cluster of a point.
 
     This implementation doesn't take into account importance of overlay of clusters and unassigned points
-    for the sake of performance
+    for the sake of performance.
 
-    Based on http://www.cs.wayne.edu/~jinghua/publication/PRL-LocalizedFeatureSelection.pdf
+    Based on the article `"Localized feature selection for clustering." <http://www.cs.wayne.edu/~jinghua/publication/PRL-LocalizedFeatureSelection.pdf>`_.
+
+    Algorithm builds clustering in the following way:
+        1. Find initial clustering using k-Means algorithm
+        2. For each cluster:
+            1. Find feature which can be dropped to improve the Scatter Separability Score
+            2. Recompute clusters without this feature
+            3. Find cluster that is the most similar to the current one
+            4. Compute normalized value of Scatter Separability Score for two clusters - current and new
+            5. If scores were improved, drop the feature and update clustering
+        3. Repeat step 2 until no changes were made
+        4. Return found clusters
+
+    Algorithm predicts clusters for new points in the following way:
+        1. Project points to the feature subspace of each cluster
+        2. Find the cluster whose center is the closest to projected point
+
+    Parameters
+    ----------
+    clusters: int
+        Number of clusters to find
+    max_iterations: int (default 100)
+        Maximal number of iterations of the algorithm
     """
 
-    def __init__(self, k):
-        self.k = k
+    def __init__(self, clusters, max_iterations=100):
+        self.clusters = clusters
         self.labels_ = None
         self.features_ = None
         self.means_ = None
         self.vars_ = None
+        self.max_iterations = max_iterations
 
     def fit(self, x):
-        k_means = KMeans(n_clusters=self.k)
-        features = [set(range(self.k)) for _ in range(self.k)]
+        """
+        Fit algorithm to dataset, find clusters and set of features for every cluster
+
+        Parameters
+        ----------
+        x: ndarray
+            The dataset
+
+        Returns
+        -------
+        self: LFSBSS
+            Returns itself to support chaining
+        """
+        n_samples, n_features = x.shape
+        # Build initial clustering
+        k_means = KMeans(n_clusters=self.clusters)
+        features = [set(range(n_features)) for _ in range(self.clusters)]
         clusters, means = self._find_clusters_and_means(k_means, x)
 
-        while True:
+        for it in range(self.max_iterations):
             was_changed = False
-            for i in range(self.k):
+            for i in range(self.clusters):
                 cluster = clusters[i]
                 mean = means[i]
                 this_features = features[i]
                 if len(this_features) == 1:
                     # Can't drop anything
                     continue
+
                 # Find a feature which we can drop and have the highest scatter separability score
                 max_score = None
                 new_features = None
@@ -56,11 +95,12 @@ class LFSBSS(BaseEstimator, ClusterMixin):
                 # Repartition dataset using new features, find a cluster that is the most similar to a current one
                 new_x = x[:, new_features]
                 new_clusters, new_means = self._find_clusters_and_means(k_means, new_x)
+
                 # Use Jaccard difference as the measure of similarity
                 max_score = None
                 most_similar = None
                 new_mean = None
-                for j in range(self.k):
+                for j in range(self.clusters):
                     new_cluster = clusters[j]
                     score = LFSBSS._jaccard_score(new_cluster, cluster)
                     if max_score is None or score > max_score:
@@ -70,11 +110,12 @@ class LFSBSS(BaseEstimator, ClusterMixin):
                 if most_similar is None or new_mean is None:
                     # Nothing to select
                     continue
+
                 # Compute normalized value of scatter separability
                 nv_old = self._compute_score(x, means, cluster, mean, list(this_features)) * \
-                    self._compute_score(x, means, cluster, mean, new_features)
+                         self._compute_score(x, means, cluster, mean, new_features)
                 nv_new = self._compute_score(x, means, most_similar, mean, list(this_features)) * \
-                    self._compute_score(new_x, new_means, most_similar, new_mean, range(len(new_features)))
+                         self._compute_score(new_x, new_means, most_similar, new_mean, range(len(new_features)))
 
                 if nv_new >= nv_old:
                     # It's better to drop this feature
@@ -88,6 +129,7 @@ class LFSBSS(BaseEstimator, ClusterMixin):
         self.features_ = features
         self.means_ = means
         self.vars_ = [None] * x.shape[0]
+
         # Compute variances for clusters
         for (idx, cluster) in enumerate(clusters):
             feature = np.array(list(features[idx]))[:, np.newaxis]
@@ -100,13 +142,28 @@ class LFSBSS(BaseEstimator, ClusterMixin):
         for i in range(x.shape[0]):
             if self.labels_[i] is None:
                 self.labels_[i] = self.predict(x[i])
+        return self
 
     def predict(self, x):
+        """
+        Predict clusters for one sample
+
+        Parameters
+        ----------
+        x: ndarray
+            Samples to predict
+
+        Returns
+        -------
+        label: int
+            Predicted cluster
+        """
+
         # Find the closest cluster to samples
         # To do it, project x to appropriate subspace, find distance to mean value and norm by variance
         min_score = None
         closest = None
-        for i in range(self.k):
+        for i in range(self.clusters):
             projection = x[:, self.features_[i]]
             norm = euclidean_distances(projection, self.means_[i])
             score = norm / self.vars_[i]
@@ -117,7 +174,7 @@ class LFSBSS(BaseEstimator, ClusterMixin):
 
     def _find_clusters_and_means(self, k_means, x):
         initial = k_means.fit_predict(x)
-        clusters = [[] for _ in range(self.k)]
+        clusters = [[] for _ in range(self.clusters)]
         means = k_means.cluster_centers_.copy()
         for (idx, c) in enumerate(initial):
             clusters[c].append(idx)

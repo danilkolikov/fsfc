@@ -8,15 +8,52 @@ class CHIR(KBestFeatureSelector):
     Chi-R feature selection algorithm for text clustering.
 
     Uses Chi-square statistics to evaluate the importance of each feature and R-coefficient
-    that normalises statistics features across the corpus
+    that normalises statistics features across the corpus.
 
-    Based on the article https://ieeexplore.ieee.org/document/4408578/
+    Based on the article
+    `"Text clustering with feature selection by using statistical data." <https://ieeexplore.ieee.org/document/4408578/>`_.
+
+    Algorithm selects features in the following way:
+        1. Find initial clustering of dataset.
+        2. Compute Chi-R scores for each feature according to the article.
+        3. Select top *k* features according to scores.
+        4. Set weights for top features equal to 1 and for others to alpha.
+        5. Recompute clustering. If it changes, repeat steps 2-5, otherwise return weights of features.
+
+    Parameters
+    ----------
+    k: int
+        Number of features to select.
+    clusters: int
+        Expected number of clusters.
+    alpha: float (default 0.1)
+        Value of weight of irrelevant feature.
+    max_iter: int (default 1000)
+        Maximal number of iterations of the algorithm.
+
     """
     def __init__(self, k, clusters, alpha=0.1, max_iter=1000):
         super().__init__(k)
         self.clusters = clusters
         self.alpha = alpha
         self.max_iter = max_iter
+
+    def fit(self, x, *rest):
+        """
+        Fit algorithm to dataset and select relevant features.
+
+        Parameters
+        ----------
+        x: csr_matrix
+            SciPy Sparse Matrix representing terms contained in every sample. May be created by vectorizers from
+            sklearn. Preferred choice is TF-IDF vectorizer.
+
+        Returns
+        -------
+        self: FTC
+            Returns itself to support chaining.
+        """
+        return super().fit(x, *rest)
 
     def _calc_scores(self, x):
         n_samples, n_features = x.shape
